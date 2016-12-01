@@ -36,7 +36,16 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
         WebView root = super.createViewInstance(reactContext);
+
+        root.getSettings().setJavaScriptEnabled(true);
+        root.getSettings().setAllowFileAccess(true);
+        root.getSettings().setAllowContentAccess(true);
+        root.getSettings().setAllowFileAccessFromFileURLs(true);
+        root.getSettings().setAllowUniversalAccessFromFileURLs(true);
+
         root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridge");
+        root.setWebChromeClient(new VideoWebChromeClient(reactContext.getCurrentActivity(), root));
+
         return root;
     }
 
