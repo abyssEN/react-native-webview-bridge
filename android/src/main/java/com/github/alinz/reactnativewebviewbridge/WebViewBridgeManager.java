@@ -1,6 +1,8 @@
 package com.github.alinz.reactnativewebviewbridge;
 
+import android.content.pm.ApplicationInfo;
 import android.webkit.WebView;
+import android.os.Build;
 
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -42,6 +44,11 @@ public class WebViewBridgeManager extends ReactWebViewManager {
         root.getSettings().setAllowContentAccess(true);
         root.getSettings().setAllowFileAccessFromFileURLs(true);
         root.getSettings().setAllowUniversalAccessFromFileURLs(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+           if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
+                root.setWebContentsDebuggingEnabled(true);
+           }
+        }
 
         root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridge");
         root.setWebChromeClient(new VideoWebChromeClient(reactContext.getCurrentActivity(), root));
